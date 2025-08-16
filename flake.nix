@@ -8,6 +8,8 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
+    home-manager.url = "github:nix-community/home-manager";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs@{ flake-parts, ... }:
@@ -35,7 +37,18 @@
         #    Then configure per-user: users.users.username.maid = { packages = [...]; };
         # 2. As standalone package: packages.maid-config = inputs.nix-maid pkgs { config };
         #
-        # Currently removed since we don't use dotfile management functionality
+        # Currently removed since we use home-manager for user-level configuration
+
+        # Home-Manager Integration (Isolated and Replaceable):
+        # - Added as separate flake input with nixpkgs follows for consistency
+        # - User config isolated in hosts/vanessa/home.nix for easy replacement
+        # - Uses useGlobalPkgs and useUserPackages for better integration
+        # - Can be easily removed by:
+        #   1. Remove home-manager input from flake.nix
+        #   2. Remove home-manager module from nixosConfigurations modules
+        #   3. Remove home-manager config from hosts/vanessa/configuration.nix
+        #   4. Delete hosts/vanessa/home.nix
+        #   5. Move user packages back to users.users.luxus.packages if needed
       };
       flake = {
         # The usual flake attributes can be defined here, including system-
@@ -51,6 +64,7 @@
             modules = [
               inputs.nixos-facter-modules.nixosModules.facter
               { config.facter.reportPath = ./hosts/vanessa/facter.json; }
+              inputs.home-manager.nixosModules.home-manager
               ./hosts/vanessa/configuration.nix
               inputs.disko.nixosModules.disko
             ];

@@ -13,6 +13,22 @@
 
   # Allow unfree packages (needed for NVIDIA drivers)
   nixpkgs.config.allowUnfree = true;
+
+  # Home Manager configuration (isolated and easily removable)
+  home-manager = {
+    # Use the global nixpkgs instance for consistency and performance
+    useGlobalPkgs = true;
+    # Install packages to /etc/profiles for better integration
+    useUserPackages = true;
+
+    # User configurations (isolated in separate files)
+    users.luxus = import ./home.nix;
+
+    # Pass system configuration to home-manager modules
+    extraSpecialArgs = {
+      # osConfig is automatically passed, but we can add more here if needed
+    };
+  };
   
   # Nix configuration with Determinate Nix enhancements
   nix.settings = {
@@ -116,37 +132,18 @@
   users.users.luxus = {
     isNormalUser = true;
     description = "Luxus";
-    extraGroups = [ "networkmanager" "wheel" ];
-    shell = pkgs.zsh;
+    extraGroups = [ "networkmanager" "wheel" "docker" ];
+    shell = pkgs.zsh; # Using zsh as requested
     initialPassword = "password";
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID/AjBtg8D4lMoBkp2L3dDb5EmkOGr1v/Ns1wwRoKds4"
     ];
-    packages = with pkgs; [
-      # User-specific packages
-      tree
-      htop
-      neofetch
-    ];
+    # User packages moved to home-manager for better isolation
+    # See hosts/vanessa/home.nix for user-specific packages
   };
   
-  # Shell configuration
-  programs.zsh = {
-    enable = true;
-    enableCompletion = true;
-    autosuggestions.enable = true;
-    syntaxHighlighting.enable = true;
-
-    shellAliases = {
-      ll = "ls -l";
-      la = "ls -la";
-      l = "ls -CF";
-      ".." = "cd ..";
-      "..." = "cd ../..";
-      grep = "grep --color=auto";
-      update = "sudo nixos-rebuild switch";
-    };
-  };
+  # Enable zsh system-wide but let home-manager handle user configuration
+  programs.zsh.enable = true;
   environment.shells = with pkgs; [ zsh ];
 
   # List packages installed in system profile

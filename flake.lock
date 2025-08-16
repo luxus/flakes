@@ -38,6 +38,26 @@
         "type": "github"
       }
     },
+    "home-manager": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1755313937,
+        "narHash": "sha256-pQb7bNcolxYGRiylUCrTddiF+qW2wsUiM9+eRIDUrVU=",
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "rev": "2a749f4790a14f7168be67cdf6e548ef1c944e10",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "home-manager",
+        "type": "github"
+      }
+    },
     "nix-maid": {
       "locked": {
         "lastModified": 1753201460,
@@ -103,6 +123,7 @@
       "inputs": {
         "disko": "disko",
         "flake-parts": "flake-parts",
+        "home-manager": "home-manager",
         "nix-maid": "nix-maid",
         "nixos-facter-modules": "nixos-facter-modules",
         "nixpkgs": "nixpkgs"
