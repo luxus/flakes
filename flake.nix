@@ -27,7 +27,8 @@
 
         # Equivalent to  inputs'.nixpkgs.legacyPackages.hello;
         packages.default = pkgs.hello;
-        packages.nix-maid = inputs'.nix-maid.packages.default;
+        # Note: nix-maid is a library/function flake, not a package flake
+        # It can be used via nixosModules or as a function, but doesn't provide packages
       };
       flake = {
         # The usual flake attributes can be defined here, including system-
