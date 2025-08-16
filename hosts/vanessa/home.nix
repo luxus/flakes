@@ -60,7 +60,7 @@
       grep = "grep --color=auto";
       fgrep = "fgrep --color=auto";
       egrep = "egrep --color=auto";
-      update = "sudo nixos-rebuild switch";
+      update = "sudo nixos-rebuild switch --flake .";
     };
 
     initContent = ''
@@ -82,40 +82,13 @@
     defaultEditor = true;
     viAlias = true;
     vimAlias = true;
-
-    extraConfig = ''
-      " Basic settings
-      set number
-      set relativenumber
-      set tabstop=2
-      set shiftwidth=2
-      set expandtab
-      set smartindent
-      set wrap
-      set ignorecase
-      set smartcase
-      set incsearch
-      set hlsearch
-
-      " Enable mouse support
-      set mouse=a
-
-      " Better colors
-      set termguicolors
-
-      " Show matching brackets
-      set showmatch
-
-      " Enable clipboard integration
-      set clipboard=unnamedplus
-    '';
   };
 
   # Session variables
   home.sessionVariables = {
     EDITOR = "nvim";
     BROWSER = "firefox";
-    TERMINAL = "alacritty";
+    TERMINAL = "ghostty";
   };
 
   # XDG directories
