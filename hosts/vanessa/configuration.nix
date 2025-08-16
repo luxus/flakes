@@ -16,8 +16,8 @@
 
   # Home Manager configuration (isolated and easily removable)
   home-manager = {
-    # Use the global nixpkgs instance for consistency and performance
-    useGlobalPkgs = true;
+    # Allow home-manager to use its own nixpkgs instance for flexibility
+    useGlobalPkgs = false;
     # Install packages to /etc/profiles for better integration
     useUserPackages = true;
 
