@@ -21,15 +21,7 @@
 
   # Basic packages for user environment
   home.packages = with pkgs; [
-    # Basic utilities
-    htop
-    tree
-    curl
-    wget
     
-    # Development tools
-    git
-    neovim
     
     # System utilities
     file
