@@ -13,6 +13,9 @@
 
   # System settings
   networking.hostName = "vanessa";
+
+  # Allow unfree packages (needed for NVIDIA drivers)
+  nixpkgs.config.allowUnfree = true;
   
   # Nix configuration with Determinate Nix enhancements
   nix.settings = {
@@ -161,7 +164,7 @@
     zsh
     # NVIDIA and graphics packages
     cudatoolkit
-    podman-compose
+    # podman-compose
     libva
     libvdpau
     vdpauinfo # NOTE: vdpauinfo

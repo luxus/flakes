@@ -7,8 +7,6 @@
     nix-maid.url = "github:viperML/nix-maid";
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
-    clan-core.url = "git+https://git.clan.lol/clan/clan-core";
-    clan-core.inputs.nixpkgs.follows = "nixpkgs";
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
     nixos-facter-modules.inputs.nixpkgs.follows = "nixpkgs";
   };
@@ -42,7 +40,6 @@
             system = "x86_64-linux";
             specialArgs = {
               inherit inputs;
-              clan-core = inputs.clan-core;
             };
             modules = [
               ./hosts/vanessa/configuration.nix

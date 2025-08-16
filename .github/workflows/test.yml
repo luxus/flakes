@@ -1,0 +1,130 @@
+name: Test NixOS Configuration
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+        with:
+          logger: pretty
+
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v2
+
+      - name: Check flake
+        run: nix flake check --show-trace
+
+      - name: Check flake health
+        uses: DeterminateSystems/flake-checker-action@v5
+
+      - name: Build vanessa configuration
+        run: |
+          echo "Building vanessa NixOS configuration..."
+          nix build .#nixosConfigurations.vanessa.config.system.build.toplevel --show-trace
+
+      - name: Build packages
+        run: |
+          echo "Building flake packages..."
+          nix build .#packages.x86_64-linux.default --show-trace
+          nix build .#packages.x86_64-linux.nix-maid --show-trace
+
+      - name: Evaluate configuration
+        run: |
+          echo "Evaluating vanessa configuration..."
+          nix eval .#nixosConfigurations.vanessa.config.system.name --raw
+          echo ""
+          nix eval .#nixosConfigurations.vanessa.config.networking.hostName --raw
+          echo ""
+
+  test-disko:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+        with:
+          logger: pretty
+
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v2
+
+      - name: Test disko configuration
+        run: |
+          echo "Testing disko configuration..."
+          # Build disko script to validate configuration
+          nix build .#nixosConfigurations.vanessa.config.system.build.diskoScript --show-trace
+          echo "Disko configuration is valid!"
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+        with:
+          logger: pretty
+
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v2
+
+      - name: Check formatting
+        run: |
+          echo "Checking Nix file formatting..."
+          # Check if files are properly formatted
+          nix fmt -- --check .
+        continue-on-error: true
+
+      - name: Validate flake inputs
+        run: |
+          echo "Validating flake inputs..."
+          nix flake metadata --json | jq '.locks.nodes | keys[]' -r
+
+  security-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v9
+        with:
+          logger: pretty
+
+      - name: Setup Magic Nix Cache
+        uses: DeterminateSystems/magic-nix-cache-action@v2
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "Checking for potential security issues..."
+          # Check for common patterns that might indicate hardcoded secrets
+          if grep -r "password.*=" hosts/ --include="*.nix" | grep -v "wheelNeedsPassword\|initialPassword"; then
+            echo "Warning: Found potential hardcoded passwords"
+          fi
+
+          # Check SSH key format
+          if grep -r "ssh-" hosts/ --include="*.nix"; then
+            echo "SSH keys found in configuration (expected)"
+          fi
+
+      - name: Validate configuration structure
+        run: |
+          echo "Validating configuration structure..."
+          # Check that required files exist
+          test -f hosts/vanessa/configuration.nix
+          test -f hosts/vanessa/disko.nix
+          test -f hosts/vanessa/facter.json
+          echo "All required configuration files present"
