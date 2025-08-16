@@ -29,6 +29,13 @@
         packages.default = pkgs.hello;
         # Note: nix-maid is a library/function flake, not a package flake
         # It can be used via nixosModules or as a function, but doesn't provide packages
+        #
+        # Future nix-maid implementation examples:
+        # 1. As NixOS module: Add nix-maid.nixosModules.default to modules list
+        #    Then configure per-user: users.users.username.maid = { packages = [...]; };
+        # 2. As standalone package: packages.maid-config = inputs.nix-maid pkgs { config };
+        #
+        # Currently removed since we don't use dotfile management functionality
       };
       flake = {
         # The usual flake attributes can be defined here, including system-
