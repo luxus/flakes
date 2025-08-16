@@ -28,6 +28,8 @@
     extraSpecialArgs = {
       # osConfig is automatically passed, but we can add more here if needed
     };
+
+    # Plasma-manager module added via flake.nix sharedModules for KDE configuration
   };
   
   # Nix configuration with Determinate Nix enhancements
@@ -164,6 +166,20 @@
     nvtopPackages.full # NOTE: check GPU usage
     # Determinate Nix tools (if available)
     # Note: determinate-nixd is typically installed via the Determinate installer
+
+    # Essential KDE packages (isolated and easily removable)
+    kdePackages.discover
+    kdePackages.kcalc
+    kdePackages.kcharselect
+    kdePackages.kcolorchooser
+    kdePackages.kolourpaint
+    kdePackages.ksystemlog
+    kdePackages.sddm-kcm
+    kdiff3
+    kdePackages.partitionmanager
+    haruna
+    wayland-utils
+    wl-clipboard
   ];
   
   # NVIDIA Hardware Configuration
@@ -224,6 +240,23 @@
 
   # Enable SSH daemon
   services.openssh.enable = true;
+
+  # KDE Plasma 6 Desktop Environment (isolated and easily removable)
+  services.desktopManager.plasma6.enable = true;
+  services.displayManager.sddm.enable = true;
+  services.displayManager.sddm.wayland.enable = true;
+
+  # Enable dconf for GTK applications in KDE
+  programs.dconf.enable = true;
+
+  # Audio support for KDE
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
   
   # Open ports in the firewall
   # networking.firewall.allowedTCPPorts = [ ... ];

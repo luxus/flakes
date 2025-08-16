@@ -10,6 +10,9 @@
     nixos-facter-modules.url = "github:nix-community/nixos-facter-modules";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    plasma-manager.url = "github:nix-community/plasma-manager";
+    plasma-manager.inputs.nixpkgs.follows = "nixpkgs";
+    plasma-manager.inputs.home-manager.follows = "home-manager";
   };
 
   outputs = inputs@{ flake-parts, ... }:
@@ -49,6 +52,17 @@
         #   3. Remove home-manager config from hosts/vanessa/configuration.nix
         #   4. Delete hosts/vanessa/home.nix
         #   5. Move user packages back to users.users.luxus.packages if needed
+
+        # KDE Plasma Integration (Isolated and Replaceable):
+        # - Added plasma-manager as separate flake input with proper follows
+        # - KDE Plasma 6 enabled at system level with Wayland support
+        # - User KDE config isolated in hosts/vanessa/home.nix via plasma-manager
+        # - Can be easily removed by:
+        #   1. Remove plasma-manager input from flake.nix
+        #   2. Remove plasma-manager from sharedModules in configuration.nix
+        #   3. Remove KDE system services from configuration.nix
+        #   4. Remove programs.plasma config from home.nix
+        #   5. Remove KDE packages from environment.systemPackages if needed
       };
       flake = {
         # The usual flake attributes can be defined here, including system-
@@ -65,6 +79,9 @@
               inputs.nixos-facter-modules.nixosModules.facter
               { config.facter.reportPath = ./hosts/vanessa/facter.json; }
               inputs.home-manager.nixosModules.home-manager
+              {
+                home-manager.sharedModules = [ inputs.plasma-manager.homeManagerModules.plasma-manager ];
+              }
               ./hosts/vanessa/configuration.nix
               inputs.disko.nixosModules.disko
             ];

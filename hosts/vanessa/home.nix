@@ -93,6 +93,49 @@
 
   # XDG directories
   xdg.enable = true;
+
+  # KDE Plasma configuration (isolated and easily replaceable)
+  programs.plasma = {
+    enable = true;
+
+    # Basic workspace configuration
+    workspace = {
+      # Set a nice wallpaper (optional)
+      # wallpaper = "${pkgs.kdePackages.plasma-workspace-wallpapers}/share/wallpapers/Next/contents/images/1920x1080.png";
+
+      # Color scheme
+      colorScheme = "BreezeDark";
+
+      # Cursor theme
+      cursor = {
+        theme = "breeze_cursors";
+        size = 24;
+      };
+
+      # Icon theme
+      iconTheme = "breeze-dark";
+    };
+
+    # Basic shortcuts
+    shortcuts = {
+      "kwin"."Switch to Desktop 1" = "Meta+1";
+      "kwin"."Switch to Desktop 2" = "Meta+2";
+      "kwin"."Switch to Desktop 3" = "Meta+3";
+      "kwin"."Switch to Desktop 4" = "Meta+4";
+      "org.kde.konsole.desktop"."_launch" = "Meta+Return";
+      "org.kde.krunner.desktop"."_launch" = ["Alt+Space" "Alt+F2"];
+    };
+
+    # Configure some basic KDE applications
+    configFile = {
+      # Konsole configuration
+      "konsolerc"."Desktop Entry"."DefaultProfile" = "luxus.profile";
+
+      # Dolphin configuration
+      "dolphinrc"."General"."BrowseThroughArchives" = true;
+      "dolphinrc"."General"."ShowFullPath" = true;
+    };
+  };
   
   # Basic file associations
   xdg.mimeApps = {
