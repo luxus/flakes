@@ -20,10 +20,9 @@
       "main" = {
         # suffix is to prevent disk name collisions
         # name = "main-" + suffix;
-        # Set the following in flake.nix for each maschine:
-        # device = <uuid>;
+        # Hardcoded device path for vanessa machine
+        device = "/dev/disk/by-id/nvme-eui.1845234220260001001b444a446ac58b";
         type = "disk";
-        # device = "/dev/nvme0n1";
         content = {
           type = "gpt";
           partitions = {

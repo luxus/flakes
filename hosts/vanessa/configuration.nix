@@ -101,6 +101,12 @@
   # services.xserver.enable = true;
   
   # Define user accounts
+  users.users.root = {
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID/AjBtg8D4lMoBkp2L3dDb5EmkOGr1v/Ns1wwRoKds4"
+    ];
+  };
+
   users.users.nixos = {
     isNormalUser = true;
     description = "NixOS User";
@@ -115,6 +121,10 @@
     description = "Luxus";
     extraGroups = [ "networkmanager" "wheel" ];
     shell = pkgs.zsh;
+    initialPassword = "password";
+    openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID/AjBtg8D4lMoBkp2L3dDb5EmkOGr1v/Ns1wwRoKds4"
+    ];
     packages = with pkgs; [
       # User-specific packages
       tree
@@ -144,7 +154,7 @@
 
   # List packages installed in system profile
   environment.systemPackages = with pkgs; [
-    vim
+    neovim
     wget
     curl
     git
@@ -215,6 +225,9 @@
     __GL_GSYNC_ALLOWED = "1"; # NOTE: nvidia g-sync
     __GL_VRR_ALLOWED = "1"; # NOTE: nvidia g-sync
   };
+
+  # Security configuration
+  security.sudo.wheelNeedsPassword = false;
 
   # Enable SSH daemon
   services.openssh.enable = true;
