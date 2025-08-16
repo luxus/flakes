@@ -36,7 +36,6 @@ jobs:
         run: |
           echo "Building flake packages..."
           nix build .#packages.x86_64-linux.default --show-trace
-          nix build .#packages.x86_64-linux.nix-maid --show-trace
 
       - name: Evaluate configuration
         run: |
