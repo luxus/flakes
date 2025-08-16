@@ -19,13 +19,10 @@
     experimental-features = [
       "nix-command"
       "flakes"
-      "lazy-trees"
     ];
     # Determinate Nix optimizations
     auto-optimise-store = true;
     trusted-users = [ "root" "@wheel" ];
-    # Enable lazy trees for better performance
-    lazy-trees = true;
     # Improved substitution settings
     substituters = [
       "https://cache.nixos.org/"
