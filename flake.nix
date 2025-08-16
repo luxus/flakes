@@ -42,9 +42,10 @@
               inherit inputs;
             };
             modules = [
+              inputs.nixos-facter-modules.nixosModules.facter
+              { config.facter.reportPath = ./hosts/vanessa/facter.json; }
               ./hosts/vanessa/configuration.nix
               inputs.disko.nixosModules.disko
-              inputs.nixos-facter-modules.nixosModules.facter
             ];
           };
         };

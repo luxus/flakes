@@ -8,9 +8,6 @@
     # ./hardware-configuration.nix
   ];
 
-  # Facter hardware detection configuration
-  facter.reportPath = ./facter.json;
-
   # System settings
   networking.hostName = "vanessa";
 
