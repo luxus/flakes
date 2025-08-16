@@ -13,6 +13,9 @@
     plasma-manager.url = "github:nix-community/plasma-manager";
     plasma-manager.inputs.nixpkgs.follows = "nixpkgs";
     plasma-manager.inputs.home-manager.follows = "home-manager";
+    stylix.url = "github:nix-community/stylix";
+    stylix.inputs.nixpkgs.follows = "nixpkgs";
+    stylix.inputs.home-manager.follows = "home-manager";
   };
 
   outputs = inputs@{ flake-parts, ... }:
@@ -63,6 +66,18 @@
         #   3. Remove KDE system services from configuration.nix
         #   4. Remove programs.plasma config from home.nix
         #   5. Remove KDE packages from environment.systemPackages if needed
+
+        # Stylix System Theming (Isolated and Replaceable):
+        # - Added stylix as separate flake input with proper follows
+        # - System-wide theming enabled with NixOS module
+        # - Home-Manager integration via sharedModules for user applications
+        # - Base16 color scheme generation from wallpaper or manual scheme
+        # - Consistent font configuration across system and applications
+        # - Can be easily removed by:
+        #   1. Remove stylix input from flake.nix
+        #   2. Remove stylix modules from nixosConfigurations and sharedModules
+        #   3. Remove stylix config from configuration.nix
+        #   4. Remove any stylix-specific config from home.nix if added
       };
       flake = {
         # The usual flake attributes can be defined here, including system-
@@ -80,8 +95,12 @@
               { config.facter.reportPath = ./hosts/vanessa/facter.json; }
               inputs.home-manager.nixosModules.home-manager
               {
-                home-manager.sharedModules = [ inputs.plasma-manager.homeManagerModules.plasma-manager ];
+                home-manager.sharedModules = [
+                  inputs.plasma-manager.homeManagerModules.plasma-manager
+                  inputs.stylix.homeModules.stylix
+                ];
               }
+              inputs.stylix.nixosModules.stylix
               ./hosts/vanessa/configuration.nix
               inputs.disko.nixosModules.disko
             ];

@@ -180,6 +180,12 @@
     haruna
     wayland-utils
     wl-clipboard
+
+    # Fonts for Stylix and general use
+    jetbrains-mono
+    dejavu_fonts
+    noto-fonts-emoji
+    base16-schemes
   ];
   
   # NVIDIA Hardware Configuration
@@ -240,6 +246,9 @@
 
   # Enable SSH daemon
   services.openssh.enable = true;
+
+  # Stylix theming handled at home-manager level to avoid conflicts
+  # System-level theming can be added here if needed for bootloader, etc.
 
   # KDE Plasma 6 Desktop Environment (isolated and easily removable)
   services.desktopManager.plasma6.enable = true;
