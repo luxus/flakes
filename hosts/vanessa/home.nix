@@ -273,6 +273,11 @@
         name = "Noto Color Emoji";
       };
     };
+
+    # Disable theming for applications you want to configure manually
+    targets = {
+      neovim.enable = false; # Keep your own neovim config
+    };
   };
 
   # Session variables
